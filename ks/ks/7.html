@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ks</title>
+    <link rel="stylesheet" href="bootstrap.css">
+</head>
+<body>
+<div id="app">
+    <parent></parent>
+</div>
+</body>
+</html>
+<script src="vue.js"></script>
+<script src="promise/axios.js"></script>
+<script>
+	let grandSon={
+		template:"<div>{{ww}}</div>",
+		data(){
+			return{
+				ww:'grandson'
+			}
+		}
+	}
+	let son={
+		template:"<div>{{s_msg}}<grandSon></grandSon> </div>",
+		data(){
+			return{
+				s_msg:'son'
+			}
+		},
+		components:{
+			grandSon
+		}
+	}
+	
+	let parent = {
+		template:"<div>{{msg}}<son></son></div>",
+		data(){
+			return{
+				msg:'parent'
+			}
+		},
+		components:{
+			son
+		}
+	}
+	
+    let vm = new Vue({
+        el:"#app",
+        data(){
+        	return{
+        		msg:'world'
+        	}
+        },
+        components:{
+        	parent
+        }
+    })
+</script>

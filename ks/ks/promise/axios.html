@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+</html>
+<script src="axios.js"></script>
+<script>
+    //get方法返回的是promise,通过then调用获取数据
+    axios.get("./data.json").then((res)=>{
+        console.log(res.data);
+    },error=>{
+       console.log(error);
+    })
+</script>

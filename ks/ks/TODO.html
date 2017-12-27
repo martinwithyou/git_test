@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TODO</title>
+    <link rel="stylesheet" href="bootstrap.css">
+    <style>
+    	.del{
+    		text-decoration: line-through;;
+    		color:#ddd;
+    	}
+    	.ww{
+    		width:200px;
+    		height:200px;
+    		background-color:#eeeeee;
+    	}
+    	.drag{
+    		position:absolute;
+    		left:0;
+    		top:0;
+    		width:50px;
+    		height:50px;
+    		background-color:#333333;
+    	}
+    </style>
+</head>
+<body>
+<div id="app">
+
+    <div class="container">
+        <div class="row">
+        	<div class="col-md-2"></div>
+            <div class="col-md-8">
+            	
+            <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">TODO List</a>
+                 </div>
+                 <div>
+               </div>
+            </div>
+           </nav>
+<!------------------>
+<div class="panel panel-default">
+	<div class="panel-heading">
+            你有：<span>{{count}}</span>件事，要完成
+    </div>
+    <div class="panel-body">
+        <input type="text" class="form-control" v-model="title" @keydown.enter="add"/>
+        <ul class="list-group">
+            <li class="list-group-item" v-for="(todo ,index) in filterTodos" @dblclick="remeber(todo)">
+            	
+            	<input type="checkbox" v-model="todo.isSelected"  v-show="cur!=todo"/>
+            	
+            	<span style="color:#000000;" v-show="cur!=todo">{{todo.content}}</span>
+            	
+            	<input type="text" v-focus="cur==todo" v-model="todo.content" v-show="cur==todo" @keydown.enter="cancel" @blur="cancel"/>
+            	
+            	<button value="delete" class="btn btn-danger btn-xs pull-right" @click="remove(todo)">delete</button>
+            	
+            </li>
+        </ul>
+    </div>
+    <div class="panel-footer">
+    	<ul class="nav nav-pills">
+        <li role="presentation" :class="{active:hash==='#/all'}"><a href="#/all">Home</a>
+        <li role="presentation" :class="{active:hash==='#/finish'}"><a href="#/finish">Profile</a>
+        <li role="presentation" :class="{active:hash==='#/unfinish'}"><a href="#/unfinish">Messages</a>
+  e.clientX      </ul>
+    </div>
+</div>
+<!------------------>
+            </div>
+        </div>
+    </div>
+
+    <div class="ww" v-color="green"></div>
+    <div class="drag" v-drag></div>
+</div>
+</body>
+</html>
+<script src="vue.js"></script>
+<script src="promise/axios.js"></script>
+<script>
+    let vm = new Vue({
+        el:"#app",
+        directives:{
+        	focus(el, binding){
+        		console.log(binding);
+        		console.log(binding.value);
+        		//给指令赋的值通过binding.value获取的
+        		if(binding.value==true){
+        			el.focus();
+        		}
+        	},
+        	//自定义指令，操作的dom元素，给dom元素添加功能。
+        	color(el,binding){
+        		//console.log(binding);
+        		//console.log(binding.value);
+        		el.style.background="red";
+        	},
+        	drag(el,binding){
+        		//console.log(binding);
+        		el.onmousedown=function(e){
+        			e.preventDefault();
+        			var x=el.offsetLeft;
+        			var y=el.offsetLeft;
+        			var mx=e.clientX;
+        			var my=e.clientY;
+        			document.onmousemove=function(e){
+        				el.style.left=x+(e.clientX-mx)+'px';
+        				el.style.top=y+(e.clientY-my)+'px';
+        			}
+        			document.onmouseup=function(e){
+        				document.onmousemove=document.onmouseup;
+        			}
+        		}
+        	}
+        },
+        data:{
+        	green:'green',
+        	hash:'',
+        	todos:[
+        	 {isSelect:false,content:'吃饭'},
+        	 {isSelect:false,content:'碎觉'},
+        	 {isSelect:false,content:'play'}
+        	],
+        	title:'',
+        	cur:''
+        },
+        created(){
+        	//只要todo发生改变就要存储
+        	this.todos=JSON.parse(localStorage.getItem('todo'))||this.todos;
+        	this.hash=window.location.hash||"#/all";
+        	window.addEventListener("hashchange",()=>{
+        		this.hash-window.location.hash;
+        	},false);
+        },
+        filters:{
+        	
+        },
+        methods:{
+        	remeber(todo){
+        		this.cur=todo;
+        	},
+        	add(){
+        		this.todos.push({isSelect:false,content:this.title});
+        		this.title='';
+        	},
+        	remove(todo){
+        		console.log(todo);
+        		this.todos=this.todos.filter(item=>{
+        			return item !== todo
+        		})
+        	},
+        	cancel(){
+        		this.cur="";
+        	}
+        },
+        computed:{
+        	count(){
+        	//默认调用get方法
+        	return this.todos.filter(item=>{
+        		return !item.isSeleted
+        	}).length;
+        	
+        	},
+        	filterTodos(){
+        		if(this.hash="#/all"){
+        			return this.todos;
+        		}
+        		if(this.hash="#/finish"){
+        			return this.todos.filter(item=>{
+        				return item.isSelected
+        			})
+        		}
+        		if(this.hash="#/unfinish"){
+        			return this.todos.filter(item=>{
+        				return !item.isSelected
+        			})
+        		}
+        	}
+        },
+        watch:{
+        	todos:{//默认只监控一层
+        		handler(newVal){
+        			localStorage.setItem('todo',JSON.stringify(newVal));
+        		},
+        		deep:true//深度监控
+        		
+        	}
+        }
+    })
+    //根据hash值，从todo里面筛选合适的值
+    //filterTodo
+</script>

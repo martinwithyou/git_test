@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+</html>
+<script src="promise-ajax.js"></script>
+<script>
+    //封装了ajax版的promise
+    ajax({url:"./data.json"}).then((res)=>{
+        console.log(JSON.parse(res));
+    },error=>{
+        console.log(error);
+    });
+</script>

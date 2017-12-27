@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ks</title>
+    <link rel="stylesheet" href="bootstrap.css">
+</head>
+<body>
+<div id="app">
+    <div class="container" style="padding-top:20px;">
+    	请输入字符串：<input type="text"  v-model="checkAll"/>{{a}}
+    </div>
+</div>
+</body>
+</html>
+<script src="vue.js"></script>
+<script src="promise/axios.js"></script>
+<script>
+    let vm = new Vue({
+        el:"#app",
+        computed:{
+        	checkAll:{
+        		get(){
+        	
+        		if(this.a.length<5){}
+        		return this.message="太多了"
+        	    },
+        	    set(val){ 
+        	    	console.log(val);
+        	    	//console.log("设置自己的值影响别人的值");
+        	    
+        	    	return this.message
+        	    //设置自己的值影响别人的值
+        	   
+        	    }
+        	}
+        },
+        data:{
+        	msg:"输入字符传"
+        	//products:[],
+        	//products:[{selected:true},{selected:true}]
+        	//计算属性具有缓存的功能
+        	//方法是每次都去计算
+        	//computed是依赖于其他属性（属性是vue实例的响应式数据）
+        	//computed依赖的数据发生改变采取从新计算，否则就获取缓存里面的数据
+        	//computed里面有get 和set 方法，设置计算属性调用的方法
+        	//method都会去重新计算
+        },
+        created(){
+        	
+        },
+        filters:{
+        	
+        },
+        methods:{
+        	
+        }
+    })
+</script>

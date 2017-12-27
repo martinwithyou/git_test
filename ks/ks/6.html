@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ks</title>
+    <link rel="stylesheet" href="bootstrap.css">
+</head>
+<body>
+<div id="app">
+	{{msg}}
+    <parent :m="msg"></parent>
+</div>
+</body>
+</html>
+<script src="vue.js"></script>
+<script src="promise/axios.js"></script>
+<script>
+	
+	let grandSon={
+		template:"<div>{{ww}}</div>",
+		data(){
+			return{
+				ww:'grandson'
+			}
+		}
+	}
+	
+	let son={
+		template:"<div>{{s_msg}}<grandSon></grandSon> </div>",
+		data(){
+			return{
+				s_msg:'son'
+			}
+		},
+		components:{
+			grandSon
+		}
+	}
+	
+	let parent = {
+		props:{
+			m:{
+			type:[Number,Object,Array,Function,Boolean],
+//			default:0,
+			required:true,
+			//require和default不能同时存在
+			validator(val){
+				return val>100
+			}
+			}
+		},
+		template:"<div>{{m}}<son></son></div>",
+		data(){
+			return{
+				msg:'parent'
+			}
+		},
+		components:{
+			son
+		}
+	}
+	
+    let vm = new Vue({
+        el:"#app",
+        data(){
+        	return{
+        		msg:300
+        	}
+        },
+        components:{
+        	parent
+        }
+    })
+    //组件之间是互相独立的
+    //不能跨作用于获取数据
+    //父组件向自组件传递数据
+    //是通过自组件传递数据
+    //:表示传递的变量
+    //没有:表示传递的字符传
+    //自组件用prop接收
+</script>

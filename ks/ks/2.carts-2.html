@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ks</title>
+    <link rel="stylesheet" href="bootstrap.css">
+</head>
+<body>
+<div id="app">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-bordered">
+                    <caption class="text-center text-warning">珠峰购物车</caption>
+                    <tr>
+                        <th><input type="checkbox" v-model="checkAll" >全选</th>
+                        <th>商品</th>
+                        <th>单价</th>
+                        <th>数量</th>
+                        <th>小计</th>
+                        <th>操作</th>
+                    </tr>
+                    <tr v-for="product in products">
+                        <td><input type="checkbox" v-model="product.isSelected"></td>
+                        <td>
+                            <img :src="product.productCover">
+                            {{product.productName}}
+                        </td>
+                        <td>{{product.productPrice}}</td>
+                        <td><input type="number" v-model.number.lazy="product.productNum" min="1"></td>
+                        <td>{{product.productPrice*product.productNum}}</td>
+                        <td>
+                            <button class="btn btn-danger btn-xs" @click="remove(product)">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">总价:{{sum}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script src="vue.js"></script>
+<script src="promise/axios.js"></script>
+<script>
+    let vm = new Vue({
+        el:"#app",
+        data:{
+        	products:[],
+        	
+        },
+        created(){
+        	axios.get('../ks/carts.json').then(res=>{
+        		this.products=res.data;
+        		console.log(res.data);
+        	},
+        	err=>{
+        		console.log(err);
+        	})
+        },
+        filters:{
+        	toFixed(input,params){
+        		return input.tofixed(params);
+        	}
+        },
+        methods:{
+        	remove(product){
+        		this.products=this.products.filter((item)=>{
+        			return item != product
+        		})
+        	}
+        },
+        computed:{
+        	sum(){ 
+                return  this.products.reduce((prev,next)=>{
+                    if(!next.isSelected) return prev;
+
+                    return prev+next.productPrice*next.productNum;
+                },0)
+            },
+        	checkAll:{
+        		get(){
+        			if(this.products.length===0){
+        				return false
+        			}else{
+        				return this.products.every(item=>{
+        					return item.isSelected;
+        				})
+        			}
+        		},
+        		set(val){
+        			this.products.forEach(item=>{
+        				item.isSelected=val;
+        			})
+        		}
+        		
+        	}
+        	
+        }
+    })
+</script>

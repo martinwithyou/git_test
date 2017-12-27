@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TODO</title>
+    <link rel="stylesheet" href="bootstrap.css">
+    <style>
+    	.del{
+    		text-decoration: line-through;;
+    		color:#ddd;
+    	}
+    	.ww{
+    		width:200px;
+    		height:200px;
+    		background-color:#eeeeee;
+    	}
+    	.drag{
+    		position:absolute;
+    		left:0;
+    		top:0;
+    		width:50px;
+    		height:50px;
+    		background-color:#333333;
+    	}
+    </style>
+</head>
+<body>
+	
+<template id="hello">
+	<h1>wwwwwwwww<h1>
+</template>
+	
+<div id="app">
+
+	
+	<Hello></Hello>
+	<Hello></Hello>
+	<Hello></Hello>
+	<!--<Echart-heres></Echart-heres>-->
+	 
+    <Echart-here>
+    	<hello/><hello>
+    </Echart-here>
+    <Echart-here></Echart-here>
+    <Echart-here></Echart-here>
+    <Echart-here></Echart-here>
+    <Echart-here></Echart-here>
+    <Echart-here></Echart-here>
+    <Echart-here></Echart-here>
+    <Echart-here></Echart-here>
+    
+    <div class="container">
+        <div class="row">
+        	<div class="col-md-2"></div>
+            <div class="col-md-8">
+            	
+            <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">TODO List</a>
+                </div>
+            </div>
+           </nav>
+<!------------------>
+<div class="panel panel-default">
+	<div class="panel-heading">
+            你有：<span>{{count}}</span>件事，要完成
+    </div>
+    <div class="panel-body">
+        <input type="text" class="form-control" v-model="title" @keydown.enter="add"/>
+        <ul class="list-group">
+            <li class="list-group-item" v-for="(todo ,index) in filterTodos" @dblclick="remeber(todo)">
+            	
+            	<input type="checkbox" v-model="todo.isSelected"  v-show="cur!=todo"/>
+            	
+            	<span style="color:#000000;" v-show="cur!=todo">{{todo.content}}</span>
+            	
+            	<input type="text" v-focus="cur==todo" v-model="todo.content" v-show="cur==todo" @keydown.enter="cancel" @blur="cancel"/>
+            	
+            	<button value="delete" class="btn btn-danger btn-xs pull-right" @click="remove(todo)">delete</button>
+            	
+            </li>
+        </ul>
+    </div>
+    <div class="panel-footer">
+    	<ul class="nav nav-pills">
+        <li role="presentation" :class="{active:hash==='#/all'}"><a href="#/all">Home</a>
+        <li role="presentation" :class="{active:hash==='#/finish'}"><a href="#/finish">Profile</a>
+        <li role="presentation" :class="{active:hash==='#/unfinish'}"><a href="#/unfinish">Messages</a>
+  e.clientX      </ul>
+    </div>
+</div>
+<!------------------>
+            </div>
+        </div>
+    </div>
+
+    <div class="ww" v-color="green"></div>
+    <div class="drag" v-drag></div>
+    <div ref='div1'></div>
+    <ul ref='div1'>
+    	<li v-for="a in arg">{{a}}</li>
+    </ul>
+    <Hello-world></Hello-world>
+    <Hello-world></Hello-world>
+    <Hello-world></Hello-world>
+    <Hello-world></Hello-world>
+    <Hello-world></Hello-world>
+    <Hello-world></Hello-world>
+    <Hello-world></Hello-world>
+    
+
+    
+</div>
+</body>
+</html>
+<script src="vue.js"></script>
+<script src="promise/axios.js"></script>
+<script>
+    //根据hash值，从todo里面筛选合适的值
+    //filterTodo
+    //把自定义的标签认定是一个组件
+    //w3c规定的标签作为一个组件
+    //组件名首字母大写
+    //不要有中文
+    //多个字母中间有横杠连接
+    //在js里面写成驼峰式样的也可以
+    //1.注册组件
+    //2.设定组件的内容，通过模板设定的
+    //3。在相应的地方放入我们的组件
+    //开发一些插件时，会用全局组件
+    //大部分组件都是可以全局使用
+    
+    
+    //组件的创建，注册组件，使用组件
+    //一个组件是一个完整的功能
+    //它包含html,js,css,是一个独立的功能模块
+    //页面上是有很多个组件，组成的
+    Vue.component('HelloWorld',{
+    	template:"<div>你好</div>"
+    })
+    Vue.component('EchartHere',{
+    	template:"<h1>this is just a component</h1>"
+    })
+    let vm = new Vue({
+        el:"#app",
+        components:{
+        	hello:{
+        		template:"#hello",
+        		data(){
+        			//组件里面的data必须写成函数，必须返回一个对象
+        			return{
+        				msg:'你好'
+        			}
+        		}
+        		
+        	}
+        },
+//      components:{
+//      	hello:{
+//      		template:'#hello',
+//      		data(){
+//      			return{
+//      				msg:'hello'
+//      			}
+//      		}
+//      	}
+//      }
+        directives:{
+        	focus(el, binding){
+        		console.log(binding);
+        		console.log(binding.value);
+        		//给指令赋的值通过binding.value获取的
+        		if(binding.value==true){
+        			el.focus();
+        		}
+        	},
+        	//自定义指令，操作的dom元素，给dom元素添加功能。
+        	color(el,binding){
+        		//console.log(binding);
+        		//console.log(binding.value);
+        		el.style.background="red";
+        	},
+        	drag(el,binding){
+        		//console.log(binding);
+        		el.onmousedown=function(e){
+        			e.preventDefault();
+        			var x=el.offsetLeft;
+        			var y=el.offsetLeft;
+        			var mx=e.clientX;
+        			var my=e.clientY;
+        			document.onmousemove=function(e){
+        				el.style.left=x+(e.clientX-mx)+'px';
+        				el.style.top=y+(e.clientY-my)+'px';
+        			}
+        			document.onmouseup=function(e){
+        				document.onmousemove=document.onmouseup;
+        			}
+        		}
+        	}
+        },
+        data:{
+        	arg:[
+        	1,2,3
+        	],
+        	green:'green',
+        	hash:'',
+        	todos:[
+        	 {isSelect:false,content:'吃饭'},
+        	 {isSelect:false,content:'碎觉'},
+        	 {isSelect:false,content:'play'}
+        	],
+        	title:'',
+        	cur:''
+        },
+        //生命周期
+        //beforeCreate
+        //created
+        //befoemount
+        //mounted
+        //beforeupdated
+        //updeated
+        //befordestory
+        //dextoryed
+        
+        //new vue
+        beforeCreate(){
+        	//debugger
+        	//alert('beforeCreate'); 
+        },
+        //初始化之前,创建了实例的初始化的方法和生命周期
+        created(){
+        	//debugger
+        	//只要todo发生改变就要存储
+        	this.todos=JSON.parse(localStorage.getItem('todo'))||this.todos;
+        	this.hash=window.location.hash||"#/all";
+        	window.addEventListener("hashchange",()=>{
+        		this.hash-window.location.hash;
+        	},false);
+        	//开始注入响应式的数据
+        	//初始化完成
+        	//通常请求数据在这里完成
+        	console.log('000000');
+//      	alert("created");
+        },
+        beforeMount(){
+        	//debugger
+//      	alert('befoemount'); 
+        	//不做处理
+        },
+        //template:"<div>1111</div>",
+        mounted(){
+        	//debugger
+        	//把在vue这里面编译好的数据，渲染成真实的dom 
+//      	alert('mounted'); 
+        	//todos
+//      	console.log(this.todos); 
+        	//看数据有没有更新，
+        	//在数据更新之前，beforeupdated
+        	//数据更新之后updeated
+        	//通过虚拟dom
+        	console.log(this.$refs.div1)
+        	this.arg=[1,2,3,4,5];
+        	this.$nextTick(()=>{
+        		console.log(this.$refs.div1.children.length);
+        	});
+        },
+        beforeupdated(){
+        	//debugger
+//      	alert('beforeupdated');
+        },
+        updeated(){
+        	//debugger
+//      	alert('updeated'); 
+        },
+        befordestory(){
+
+//      	alert('befordestory');
+           debugger
+        },
+        dextoryed(){
+        	debugger
+        	//在销毁之前
+        	//解除观察者，监听者，
+        	//解除自组件
+        	//解除事件的监听函数
+        	//数据变化后，页面就不会再有变动
+//      	alert('dextoryed');
+            //vm.$destory();
+        },
+
+        filters:{
+        	
+        },
+        methods:{
+        	remeber(todo){
+        		this.cur=todo;
+        	},
+        	add(){
+        		this.todos.push({isSelect:false,content:this.title});
+        		this.title='';
+        	},
+        	remove(todo){
+        		console.log(todo);
+        		this.todos=this.todos.filter(item=>{
+        			return item !== todo
+        		})
+        	},
+        	cancel(){
+        		this.cur="";
+        	}
+        },
+        computed:{
+        	count(){
+        	//默认调用get方法
+        	return this.todos.filter(item=>{
+        		return !item.isSeleted
+        	}).length;
+        	
+        	},
+        	filterTodos(){
+        		if(this.hash="#/all"){
+        			return this.todos;
+        		}
+        		if(this.hash="#/finish"){
+        			return this.todos.filter(item=>{
+        				return item.isSelected
+        			})
+        		}
+        		if(this.hash="#/unfinish"){
+        			return this.todos.filter(item=>{
+        				return !item.isSelected
+        			})
+        		}
+        	}
+        },
+        watch:{
+        	todos:{//默认只监控一层
+        		handler(newVal){
+        			localStorage.setItem('todo',JSON.stringify(newVal));
+        		},
+        		deep:true//深度监控
+        		
+        	}
+        }
+    })
+    console.log('.......');
+    console.log(vm.$options);
+
+</script>
