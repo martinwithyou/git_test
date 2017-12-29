@@ -1,0 +1,13 @@
+var a=new String;
+var b=new Number;
+var c=new Boolean;
+var d=new Array;
+var e=new Object;
+//var f=new Symbol();
+console.log(a);
+console.log(b);
+console.log(c);
+console.log(d);
+console.log(e);
+console.log(f);
+//console.log();
